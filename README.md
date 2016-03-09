@@ -17,12 +17,12 @@ It aims to solve some of the PCI-DSS scope for the following [PCIDSS v3](https:/
 
 | PCI Requirement | Description |
 | :---: | :--- |
+| 8.1.4 | Observe user accounts to verify that any inactive accounts over **90 days old** are either removed or disabled. |
 | 8.1.6 | Limit repeated access attempts by locking out the user ID after not more than **6 attempts**. |
 | 8.1.7 | Set the lockout duration to a minimum of **30 minutes** or until administrator enables the user ID. |
 | 8.1.8 | If a session has been idle for more than **15 minutes**, require the user to re-authenticate to re-activate the terminal or session. |
-| 8.2.1 | Using strong cryptography, render all authentication credentials - LDAPs |
-| 8.2.3 | Require a minimum password length of at least **7 characters**. |
-| 8.2.3 | Use passwords containing both **numeric and alphabetic** characters. |
+| 8.2.1 | Using strong cryptography, render all authentication credentials - **LDAPS/TLS** |
+| 8.2.3 | Require a minimum password length of at least **7 characters**. / Use passwords containing both **numeric and alphabetic** characters. |
 | 8.2.4 | Change user passwords at least every **90 days**. |
 | 8.2.5 | Do not allow an individual to submit a new password that is the same as any of the last **4 passwords** he or she has used. |
 | 8.2.6 | Set passwords/phrases for first-time use and upon reset to a unique value for each user, and change immediately after the first use. |
