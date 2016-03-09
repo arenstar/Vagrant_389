@@ -31,10 +31,10 @@ It aims to solve some of the PCI-DSS scope for the following [PCIDSS v3](https:/
 
 It creates 2 posix groups:
 
-| Group |  ID   |
-| :---: | :---: |
-| priv.ldap | 5000  |
-| unpriv.ldap | 5001  |
+| Group |  ID   | sudo  |
+| :---: | :---: | :---: |
+| priv.ldap | 5000  | yes |
+| unpriv.ldap | 5001  | no |
 
 It creates 2 posix users:
 
@@ -42,6 +42,7 @@ It creates 2 posix users:
 | :---------: | :-------: | :---: | :---------: |
 | jsmith      | Pa$$w0rd  | 10000 | priv.ldap   |
 | mmustermann | QaWsEd123 | 10001 | unpriv.ldap |
+
 
 
 This vagrant setup also configures multimaster replication between
