@@ -2,27 +2,38 @@
 
 ## What is this 389 Setup
 
-This vagrant setup is a simple example to get a [389 Server](http://directory.fedoraproject.org/ "389 Server") setup with a client machine authenticating.
-Based on Ubuntu 14.04 Trusty64
-It aims to solve some of the PCI-DSS scope for the following 
+This vagrant setup is an example to get:
 
-8.1.6 Limit repeated access attempts by locking out the user ID after not more than six attempts.
-8.1.7 Set the lockout duration to a minimum of 30 minutes or until administrator enables the user ID.
-8.1.8 If a session has been idle for more than 15 minutes, require the user to re-authenticate to re-activate the terminal or session.
+* A [389 Server](http://directory.fedoraproject.org/ "389 Server") setup with a client machine authenticating.
+* MultiMaster replication
+* Client machine Authentication using SSSD
 
-8.2.1 Using strong cryptography, render all authentication credentials - LDAPs
-8.2.3 Require a minimum password length of at least seven characters.
-8.2.3 Use passwords containing both numeric and alphabetic characters.
-8.2.4 Change user passwords at least every 90 days.
-8.2.5 Do not allow an individual to submit a new password that is the same as any of the last four passwords he or she has used.
-8.2.6 Set passwords/phrases for first-time use and upon reset to a unique value for each user, and change immediately after the first use.
+___Based on Ubuntu 14.04 Trusty64___
+
+It aims to solve some of the PCI-DSS scope for the following [PCIDSS v3](https://www.pcisecuritystandards.org/documents/PCI_DSS_v3.pdf "PCIDSS v3")
+
+| PCI Requirement | Description   |
+| --------------- | ------------- |
+| 8.1.6           | Limit repeated access attempts by locking out the user ID after not more than six attempts. |
+| 8.1.7           | Set the lockout duration to a minimum of 30 minutes or until administrator enables the user ID.  |
+| 8.1.8           | If a session has been idle for more than 15 minutes, require the user to re-authenticate to re-activate the terminal or session. |
+| 8.2.1           | Using strong cryptography, render all authentication credentials - LDAPs |
+| 8.2.3           | Require a minimum password length of at least seven characters. |
+| 8.2.3           | Use passwords containing both numeric and alphabetic characters. |
+| 8.2.4           | Change user passwords at least every 90 days. |
+| 8.2.5           | Do not allow an individual to submit a new password that is the same as any of the last four passwords he or she has used. |
+| 8.2.6           | Set passwords/phrases for first-time use and upon reset to a unique value for each user, and change immediately after the first use. |
+
 
 It creates 2 simple users:
- 
-John Test "jtest" with the password "Pa$$w0rd".
-Max Mustermann "mmustermann" with the password "QaWsEd123".
 
-This vagrant setup configures multimaster replication between
+| Username    | Password  |
+| ----------- | --------- |
+| jtest       | Pa$$w0rd  |
+| mmustermann | QaWsEd123 |
+
+
+This vagrant setup also configures multimaster replication between
 ldap.arenstar.net and replica.arenstar.net 
 
 ## How do i run this setup?
