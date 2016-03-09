@@ -9,6 +9,7 @@ This setup is a vagrant example to achieve:
 * A [389 Server](http://directory.fedoraproject.org/ "389 Server") **ldap.arenstar.net**).
 * MultiMaster replication **replica.arenstar.net** (NEEDS SSL IMPLEMENTATION)
 * Client machine Authentication using SSSD **client.arenstar.net**
+* SSHPubKey integration
 * Full live backups
 * Basic group and user setup
 * Password Policy and Lockout Policy configuration
@@ -67,13 +68,19 @@ vagrant ssh 389-replica
 sudo /usr/bin/389-console -a http://replica.arenstar.net:9830
 ```
 
-### Testing client login for ldap users
+### Testing password login for LDAP users
 ```
 vagrant ssh 389-client
 ssh jsmith@127.0.0.1 
 
 vagrant ssh 389-client
 su - mmustermann
+```
+
+### Testing SSH PubKey login for LDAP users
+```
+vagrant ssh 389-client
+ssh -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
 ```
 
 ### Some helpers
