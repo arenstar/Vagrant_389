@@ -1,0 +1,9 @@
+dn: cn=replication manager,cn=config
+objectClass: top
+objectClass: person
+objectClass: inetorgperson
+cn: replication manager
+sn: RM
+userPassword: secret
+passwordExpirationTime: 20380119031407Z
+nsIdleTimeout: 0

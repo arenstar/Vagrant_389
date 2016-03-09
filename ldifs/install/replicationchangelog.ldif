@@ -1,0 +1,5 @@
+dn: cn=changelog5,cn=config
+objectclass: top
+objectclass: extensibleObject
+cn: changelog5
+nsslapd-changelogdir: /var/lib/dirsrv/slapd-ldap/changelogdb

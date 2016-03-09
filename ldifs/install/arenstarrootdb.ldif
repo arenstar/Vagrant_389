@@ -1,0 +1,7 @@
+dn: cn="dc=arenstar,dc=net",cn=mapping tree,cn=config
+objectclass: top
+objectclass: extensibleObject
+objectclass: nsMappingTree
+nsslapd-state: backend
+nsslapd-backend: UserData
+cn: dc=arenstar,dc=net

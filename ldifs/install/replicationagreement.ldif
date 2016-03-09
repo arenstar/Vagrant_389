@@ -1,0 +1,14 @@
+dn: cn=replicaagreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config
+objectclass: top
+objectclass: nsds5replicationagreement
+cn: replicaagreement
+nsds5replicahost: replica.arenstar.net
+nsds5replicaport: 389
+nsds5ReplicaBindDN: cn=replication manager,cn=config
+nsds5replicabindmethod: SIMPLE
+nsds5replicaroot: dc=arenstar,dc=net
+description: agreement between supplier and consumer
+nsds5replicaupdateschedule: 0000-2359 0123456
+nsds5replicatedattributelist: (objectclass=*) $ EXCLUDE authorityRevocationList
+nsDS5ReplicaCredentials: secret
+nsds5BeginReplicaRefresh: start

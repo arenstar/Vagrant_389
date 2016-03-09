@@ -1,0 +1,11 @@
+dn: cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config
+objectclass: top
+objectclass: nsds5replica
+objectclass: extensibleObject
+cn: replica
+nsds5replicaid: 1
+nsds5replicatype: 3
+nsds5ReplicaPurgeDelay: 604800
+nsds5ReplicaBindDN: cn=replication manager,cn=config
+nsds5replicaroot: dc=arenstar,dc=net
+nsds5flags: 1

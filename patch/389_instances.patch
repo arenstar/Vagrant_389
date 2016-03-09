@@ -1,0 +1,61 @@
+--- /etc/puppet/modules/port389/manifests/instance.pp	2016-03-09 02:45:24.833636516 +0000
++++ instance.pp	2016-03-09 02:55:27.216285557 +0000
+@@ -13,6 +13,9 @@
+   $ssl_key                    = $::port389::ssl_key,
+   $ssl_ca_certs               = $::port389::ssl_ca_certs,
+   $schema_file                = undef,
++  $config_file                = undef,
++  $install_ldif_file          = undef,
++  $add_org_entries            = no,
+   $suffix                     = port389_domain2dn($::port389::admin_domain),
+ ) {
+   # follow the same server identifier validation rules as setup-ds-admin.pl
+@@ -61,12 +64,13 @@
+       'SysUser'         => $::port389::user,
+     },
+     'slapd'   => {
+-      'AddOrgEntries'    => 'No',
++      'AddOrgEntries'    => $add_org_entries,
+       'AddSampleEntries' => 'No',
+-      'InstallLdifFile'  => '',
++      'InstallLdifFile'  => $install_ldif_file,
+       'RootDN'           => $root_dn,
+       'RootDNPwd'        => $root_dn_pwd,
+       'SchemaFile'       => $schema_file,
++      'ConfigFile'       => $config_file,
+       'ServerIdentifier' => $title,
+       'ServerPort'       => $server_port,
+       'SlapdConfigForMC' => 'yes',
+@@ -115,7 +119,7 @@
+         command   => "setup-ds-admin.pl --file=${setup_inf_path} --silent",
+         unless    => "/usr/bin/test -e /etc/dirsrv/slapd-${title}",
+         logoutput => true,
+-        notify    => Service[$title],
++        notify    => Service['dirsrv'],
+       }
+
+       if $enable_ssl {
+@@ -128,7 +132,7 @@
+           ssl_cert        => $ssl_cert,
+           ssl_key         => $ssl_key,
+           ssl_ca_certs    => $ssl_ca_certs,
+-          notify          => Service[$title],
++          notify          => Service['dirsrv'],
+         }
+       }
+
+@@ -145,14 +149,6 @@
+         Class['port389::admin::service']
+       }
+
+-      # XXX this is extremely RedHat specific
+-      service { $title:
+-        ensure     => 'running',
+-        control    => 'dirsrv',
+-        hasstatus  => true,
+-        hasrestart => true,
+-        provider   => 'redhat_instance',
+-      }
+     }
+     default: {
+       warning("it is meaningless to declare Port389::Instance[${name}] while Class[port389]{ ensure => 'absent|purged' }")

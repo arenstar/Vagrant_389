@@ -1,0 +1,76 @@
+dn: cn=config
+changetype: modify
+replace: passwordIsGlobalPolicy
+passwordIsGlobalPolicy: on
+-
+replace: nsslapd-pwpolicy-local
+nsslapd-pwpolicy-local: on
+-
+replace: passwordMaxAge
+passwordMaxAge: 5184000
+-
+replace: passwordMinAge
+passwordMinAge: 7776000
+-
+replace: passwordHistory
+passwordHistory: on
+-
+replace: passwordInHistory
+passwordInHistory: 4
+-
+replace: passwordMustChange
+passwordMustChange: on
+-
+replace: passwordChange
+passwordChange: on
+-
+replace: passwordGraceLimit
+passwordGraceLimit: 0
+-
+replace: passwordExp
+passwordExp: on
+-
+replace: passwordMinAge
+passwordMinAge: 0
+-
+replace: passwordWarning
+passwordWarning: 86400
+-
+replace: passwordCheckSyntax
+passwordCheckSyntax: on
+-
+replace: passwordMinLength
+passwordMinLength: 7
+-
+replace: passwordMaxRepeats
+passwordMaxRepeats: 0
+-
+replace: passwordMinAlphas
+passwordMinAlphas: 1
+-
+replace: passwordMinDigits
+passwordMinDigits: 1
+-
+replace: passwordMinSpecials
+passwordMinSpecials: 0
+-
+replace: passwordMinLowers
+passwordMinLowers: 0
+-
+replace: passwordMinUppers
+passwordMinUppers: 1
+-
+replace: passwordMinCategories
+passwordMinCategories: 3
+-
+replace: passwordStorageScheme
+passwordStorageScheme: SSHA
+-
+replace: passwordLockoutDuration
+passwordLockoutDuration: 1800
+-
+replace: passwordMaxFailure
+passwordMaxFailure: 6
+-
+replace: passwordLockout
+passwordLockout: on

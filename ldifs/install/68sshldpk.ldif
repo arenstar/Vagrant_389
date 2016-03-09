@@ -1,0 +1,51 @@
+# 68sshlpk.ldif
+# ldapPublicKey
+#
+# LDAP Public Key Patch schema for use with openssh-ldappubkey
+#                              useful with PKA-LDAP also
+#
+# Author: Eric AUGE <eau@phear.org>
+#
+# Based on the proposal of : Mark Ruijter
+#
+################################################################################
+#
+dn: cn=schema
+#
+################################################################################
+#
+attributeTypes: (
+  1.3.6.1.4.1.24552.500.1.1.1.13
+  NAME 'sshPublicKey'
+  DESC 'MANDATORY: OpenSSH Public key'
+  EQUALITY octetStringMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.40
+  )
+#
+################################################################################
+#
+objectClasses: (
+  1.3.6.1.4.1.24552.500.1.1.2.0
+  NAME 'ldapPublicKey'
+  SUP top
+  AUXILIARY
+  DESC 'MANDATORY: OpenSSH LPK objectclass'
+  MUST ( uid ) MAY ( sshPublicKey )
+  )
+#
+################################################################################
+#
+
+dn: cn=sshpublickey,cn=default indexes,cn=config,cn=ldbm database,cn=plugins,cn=config
+cn: sshpublickey
+nsIndexType: eq
+nsIndexType: pres
+nsSystemIndex: false
+objectClass: top
+objectClass: nsIndex
+
+dn: cn=sshpublickey_self_manage,ou=groups,dc=arenstar,dc=net
+objectClass: top
+objectClass: groupofuniquenames
+cn: sshpublickey_self_manage
+description: Members of this group gain the ability to edit their own sshPublicKey field

@@ -1,0 +1,11 @@
+dn: ou=people,dc=arenstar,dc=net
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=arenstar,dc=net
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: groups

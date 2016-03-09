@@ -1,0 +1,7 @@
+dn: cn=sshpublickey,cn=default indexes,cn=config,cn=ldbm database,cn=plugins,cn=config
+cn: sshpublickey
+nsIndexType: eq
+nsIndexType: pres
+nsSystemIndex: false
+objectClass: top
+objectClass: nsIndex

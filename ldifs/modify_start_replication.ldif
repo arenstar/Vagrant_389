@@ -1,0 +1,4 @@
+dn: cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config
+changetype: modify
+replace: nsds5beginreplicarefresh
+nsds5beginreplicarefresh: start

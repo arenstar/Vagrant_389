@@ -1,0 +1,25 @@
+dn: cn=sshpublickey_self_manage,ou=groups,dc=arenstar,dc=net
+changetype: add
+objectClass: top
+objectClass: groupofuniquenames
+cn: sshpublickey_self_manage
+description: Members of this group gain the ability to edit their own sshPublicKey field
+
+dn: cn=priv.ldap,ou=groups,dc=arenstar,dc=net
+changetype: add
+objectClass: top
+objectClass: groupofuniquenames
+objectClass: posixgroup
+gidNumber: 5000
+memberuid: jsmith
+cn: priv.ldap
+
+dn: cn=unpriv.ldap,ou=groups,dc=arenstar,dc=net
+changetype: add
+objectClass: top
+objectClass: groupofuniquenames
+objectClass: posixgroup
+gidNumber: 5001
+memberuid: mmustermann
+cn: unpriv.ldap
+
