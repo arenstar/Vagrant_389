@@ -6,7 +6,7 @@ ___Based on Ubuntu 14.04 Trusty64___
 
 This setup is a vagrant example to achieve:
 
-* A [389 Server](http://directory.fedoraproject.org/ "389 Server") **lda√p.arenstar.net**).
+* A [389 Server](http://directory.fedoraproject.org/ "389 Server") **ldap.arenstar.net**).
 * MultiMaster replication **replica.arenstar.net** (NEEDS SSL IMPLEMENTATION)
 * Client machine Authentication using SSSD **client.arenstar.net**
 * Full live backups
