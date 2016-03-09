@@ -84,14 +84,16 @@ node default {
 
   ### Quick ldif backup 
 
-  file { 'dirsrv_backup_dir':
-    ensure  => directory,
-    name    => '/var/backups',
-    owner   => 'dirsrv',
-    group   => 'dirsrv',
-    mode    => '0750';
-  }
+  $cron_command = "/usr/sbin/db2ldif-online -P LDAP -D 'cn=Directory Manager' -j '/etc/dirsrv/manager-pass' -Z ldap -a '/var/backups/ldap.ldif' -s 'dc=arenstar,dc=net' > /dev/null"
 
+  file { 'dirsrv_backup_dir':
+    ensure      => directory,
+    name        => '/var/backups',
+    owner       => 'dirsrv',
+    group       => 'dirsrv',
+    mode        => '0750',
+    subscribe   => Service["dirsrv"],
+  }->
   file { 'dirsrv-manager-pass':
     ensure  => present,
     name    => "/etc/dirsrv/manager-pass",
@@ -99,10 +101,7 @@ node default {
     owner   => dirsrv,
     group   => dirsrv,
     mode    => '0750',
-  }
-
-  $cron_command = "/usr/sbin/db2ldif-online -P LDAP -D 'cn=Directory Manager' -j '/etc/dirsrv/manager-pass' -Z ldap -a '/var/backups/ldap.ldif' -s 'dc=arenstar,dc=net' > /dev/null"
-
+  }->
   cron { "dirsrv-backup-ldap-cron":
     ensure      => present,
     command     => $cron_command,
