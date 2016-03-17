@@ -32,6 +32,8 @@ node default {
         'debug_level'                => 3,
       },
       'nss' => {
+        'filter_users'               => 'root',
+        'filter_groups'              => 'root',
         'debug_level'                => 3,
       },
       'pam' => {
