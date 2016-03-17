@@ -8,15 +8,17 @@ node default {
     mkhomedir => true,
     config    => {
       'sssd' => {
-        'domains'              => 'default',
-        'config_file_version'  => 2,
-        'reconnection_retries' => 3,
-        'sbus_timeout'         => 30,
-        'services'             => ['nss', 'pam', 'ssh', 'sudo'],
+        'domains'               => 'default',
+        'default_domain_suffix' => 'default',
+        'config_file_version'   => 2,
+        'reconnection_retries'  => 3,
+        'sbus_timeout'          => 30,
+        'services'              => ['nss', 'pam', 'ssh', 'sudo'],
         'debug_level'           => 3,
       },
       'domain/default' => {
         'enumerate'                  => true,
+        'min_id'                     => 1000,
         'id_provider'                => 'ldap',
         'auth_provider'              => 'ldap',
         'cache_credentials'          => true,
