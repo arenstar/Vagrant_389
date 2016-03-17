@@ -10,6 +10,8 @@ This setup is a vagrant example to achieve:
 * MultiMaster replication **replica.arenstar.net** (NEEDS SSL IMPLEMENTATION)
 * Client machine Authentication using SSSD **client.arenstar.net**
 * SSHPubKey integration
+* Sudo integration for group **priv.ldap** over ldap
+* Sudo authentication via ssh-agent over ldap
 * Full live backups
 * Basic group and user setup
 * Password Policy and Lockout Policy configuration
@@ -81,8 +83,20 @@ su - mmustermann
 ### Testing SSH PubKey login for LDAP users
 ```
 vagrant ssh 389-client
-ssh -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
+ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
 ```
+
+### Testing SSH PubKey sudo passwordless login for LDAP users
+Requires [pam-ssh-agent-auth](http://ppa.launchpad.net/cpick/pam-ssh-agent-auth/ubuntu/pool/main/p/pam-ssh-agent-auth/pam-ssh-agent-auth_0.10.2-0ubuntu0ppa1_amd64.deb"pam-ssh-agent-auth") >= 0.10.2 
+
+http://pamsshagentauth.sourceforge.net/
+
+```
+vagrant ssh 389-client
+ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
+sudo su
+```
+
 
 ### Some helpers
 ```
