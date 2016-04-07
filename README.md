@@ -6,7 +6,7 @@ ___Based on Ubuntu 14.04 Trusty64___
 
 This setup is a vagrant example to achieve:
 
-* A [389 Server](http://directory.fedoraproject.org/ "389 Server") **ldap.arenstar.net**).
+* A [389 Server](http://directory.fedoraproject.org/ "389 Server") **server.arenstar.net**).
 * MultiMaster replication **replica.arenstar.net** (NEEDS SSL IMPLEMENTATION)
 * Client machine Authentication using SSSD **client.arenstar.net**
 * SSHPubKey integration
@@ -48,7 +48,7 @@ It creates 2 posix users:
 
 
 This vagrant setup also configures multimaster replication between
-ldap.arenstar.net and replica.arenstar.net 
+server.arenstar.net and replica.arenstar.net 
 
 ## How do i run this setup?
 
@@ -65,7 +65,7 @@ vagrant destroy
 (Note: To get X11 on OSX install xquartz - http://www.xquartz.org/ )
 ```
 vagrant ssh 389-server
-sudo /usr/bin/389-console -a http://ldap.arenstar.net:9830
+sudo /usr/bin/389-console -a http://server.arenstar.net:9830
 
 vagrant ssh 389-replica
 sudo /usr/bin/389-console -a http://replica.arenstar.net:9830
@@ -98,13 +98,86 @@ sudo su
 ```
 
 
-### Some helpers
+### Return All Objects For A User
 ```
-ldapsearch -D "cn=Directory Manager" -w password -p 389 -h ldap.arenstar.net -s base -b "uid=jsmith,ou=people,dc=arenstar,dc=net" "objectclass=*"
-ldapwhoami -vvv -h ldap.arenstar.net -p 389 -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w QaWsEd123 -x
-ldapsearch -x -H ldaps://ldap.arenstar.net -b dc=arenstar,dc=net
-ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/ldifs/modify_start_replication.ldif
+ldapsearch  -D "cn=Directory Manager" -w password -H ldap://server.arenstar.net -s base -b "uid=jsmith,ou=people,dc=arenstar,dc=net" "objectclass=*"
+```
+
+
+### Check Users Password
+```
+$ ldapwhoami -x -H ldap://replica.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w QaWsEd123
+dn: uid=mmustermann,ou=people,dc=arenstar,dc=net
+$ ldapwhoami -x -H ldap://replica.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w wrongpassword
+ldap_bind: Invalid credentials (49)
+```
+
+### Print Entire Directory
+```
+ldapsearch -x -H ldaps://server.arenstar.net -b dc=arenstar,dc=net
+```
+
+dn: cn=slapd-ldap,cn=389 Directory Server,cn=Server Group,cn=server.arenstar.net,ou=arenstar.net,o=NetscapeRoot
+changetype: modify
+replace: nsServerSecurity
+nsServerSecurity: on
+
+
+### Checking Replication Status
+Refer to "nsds5replicaLastUpdateStatus"
+```
+vagrant ssh 389-server
 ldapsearch -D "cn=directory manager" -w password -s sub -b cn=config "(objectclass=nsds5ReplicationAgreement)"
+
+
+
+# extended LDIF
+#
+# LDAPv3
+# base <cn=config> with scope subtree
+# filter: (objectclass=nsds5ReplicationAgreement)
+# requesting: ALL
+#
+
+# replicaagreement, replica, dc\3Darenstar\2Cdc\3Dnet, mapping tree, config
+dn: cn=replicaagreement,cn=replica,cn=dc\3Darenstar\2Cdc\3Dnet,cn=mapping tree
+ ,cn=config
+objectClass: top
+objectClass: nsds5replicationagreement
+cn: replicaagreement
+nsDS5ReplicaHost: replica.arenstar.net
+nsDS5ReplicaPort: 389
+nsDS5ReplicaBindDN: cn=replication manager,cn=config
+nsDS5ReplicaBindMethod: SIMPLE
+nsDS5ReplicaTransportInfo: TLS
+nsDS5ReplicaRoot: dc=arenstar,dc=net
+description: agreement between supplier and consumer
+nsDS5ReplicaUpdateSchedule: 0000-2359 0123456
+nsDS5ReplicatedAttributeList: (objectclass=*) $ EXCLUDE authorityRevocationLis
+ t
+nsDS5ReplicaCredentials: secret
+nsds5replicareapactive: 0
+nsds5replicaLastUpdateStart: 20160407115515Z
+nsds5replicaLastUpdateEnd: 20160407115515Z
+nsds5replicaChangesSentSinceStartup:
+nsds5replicaLastUpdateStatus: 0 Replica acquired successfully: Incremental upd
+ ate succeeded
+nsds5replicaUpdateInProgress: FALSE
+nsds5replicaLastInitStart: 20160407115512Z
+nsds5replicaLastInitEnd: 20160407115514Z
+nsds5replicaLastInitStatus: 0 Total update succeeded
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
 ```
 
-
+### Starting Replication 
+```
+vagrant ssh 389-server
+$ ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/ldifs/modify_start_replication.ldif
+modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config"
+```
