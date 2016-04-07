@@ -67,6 +67,10 @@ node default {
     subscribe   => Service["dirsrv"],
     refreshonly => true
   }->
+  exec { "create_security_policy":
+    command     => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/ldifs/create_security_policy.ldif",
+    unless      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'cn=config' 'objectclass=*'|grep -i nsslapd-security | grep on",
+  }->
   exec { "create_organisation_units":
     command     => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/ldifs/create_organisational_units.ldif",
     unless      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'ou=people,dc=arenstar,dc=net' 'ou=people'",
