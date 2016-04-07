@@ -6,6 +6,7 @@ nsds5replicahost: replica.arenstar.net
 nsds5replicaport: 389
 nsds5ReplicaBindDN: cn=replication manager,cn=config
 nsds5replicabindmethod: SIMPLE
+nsDS5ReplicaTransportInfo: TLS
 nsds5replicaroot: dc=arenstar,dc=net
 description: agreement between supplier and consumer
 nsds5replicaupdateschedule: 0000-2359 0123456
