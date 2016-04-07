@@ -26,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "389-server", primary: true, autostart: true do |server|
     server.vm.box = "ubuntu/trusty64"
-    server.vm.hostname = 'ldap.arenstar.net'
+    server.vm.hostname = 'server.arenstar.net'
     server.vm.network :private_network, ip: "192.168.56.10"
     server.vm.provision :shell, :path => "tests/provision_server.sh"
     server.vm.provision :puppet, :manifests_path => ["vm","/vagrant/tests"], :manifest_file => "389-server.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"

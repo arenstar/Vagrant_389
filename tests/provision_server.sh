@@ -10,7 +10,7 @@ puppet module install puppetlabs-java
 puppet module install camptocamp-augeas
 puppet module install jhoblitt-port389
 
-echo "127.0.0.1 ldap.arenstar.net ldap" >> /etc/hosts
+echo "127.0.0.1 server.arenstar.net server" >> /etc/hosts
 echo '192.168.56.10 ldap.arenstar.net' >> /etc/hosts
 echo '192.168.56.11 client.arenstar.net' >> /etc/hosts
 echo '192.168.56.12 replica.arenstar.net' >> /etc/hosts
