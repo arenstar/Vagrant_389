@@ -1,0 +1,7 @@
+dn: cn=<%= @group -%>,<%= @ou -%>,<%= @ldap_suffix %>
+objectClass: top
+objectClass: groupofuniquenames
+objectClass: posixgroup
+gidNumber: <%= @gidnumber %>
+memberuid: <%= @memberuid %>
+cn: <%= @group %>

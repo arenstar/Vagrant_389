@@ -70,23 +70,77 @@ node default {
   exec { "create_security_policy":
     command     => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/puppet/files/create_security_policy.ldif",
     unless      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'cn=config' 'objectclass=*'|grep -i nsslapd-security | grep on",
-  }->
-  exec { "create_organisation_units":
-    command     => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/puppet/files/create_organisational_units.ldif",
-    unless      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'ou=people,dc=arenstar,dc=net' 'ou=people'",
-  }->
-  exec { "create_groups":
-    command   => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/puppet/files/create_groups.ldif",
-    unless    => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'cn=priv.ldap,ou=groups,dc=arenstar,dc=net' 'cn=priv.ldap'"
-  }->
-  exec { "create_user":
-    command   => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/puppet/files/create_user.ldif",
-    unless    => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b 'uid=jsmith,ou=people,dc=arenstar,dc=net' 'uid=jsmith'"
+    notify      => Ldap::Ou::Add['people']
   }
+
+
+  ldap::ou::add { 'people':
+    ldap_suffix => 'dc=arenstar,dc=net',
+  }->
+  ldap::ou::add { 'groups':
+    ldap_suffix => 'dc=arenstar,dc=net',
+  }->
+  ldap::group::add { 'priv.ldap':
+    ou          => 'ou=groups',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    gidnumber   => '5000',
+    memberuid   => 'jsmith',
+  }->
+  ldap::group::add { 'unpriv.ldap':
+    ou          => 'ou=groups',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    gidnumber   => '5001',
+    memberuid   => 'mmustermann',
+  }->
+  ldap::user::add { 'thenewguy':
+    ou          => 'ou=people',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    givenname   => 'new',
+    lastname    => 'guy',
+    uidnumber   => '123456',
+    gidnumber   => '123456',
+  }->
+  ldap::user::add { 'mmustermann':
+    ou          => 'ou=people',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    givenname   => 'max',
+    lastname    => 'mustermann',
+    uidnumber   => '10001',
+    gidnumber   => '5001',
+    password    => 'QaWsEd123',
+    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
+  }->
+  ldap::user::add { 'jsmith':
+    ou          => 'ou=people',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    givenname   => 'john',
+    lastname    => 'smith',
+    uidnumber   => '10000',
+    gidnumber   => '5000',
+    password    => 'Pa$$w0rd',
+    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
+  }->
+  ldap::user::modify_pubkey { 'jsmith':
+    ou          => 'ou=people',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
+  }->
+  ldap::user::modify_pubkey { 'sthenewguy':
+    ou          => 'ou=people',
+    ldap_suffix => 'dc=arenstar,dc=net',
+    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
+  }
+
+  #anchor { 'begin': }  ->
+  #  class  { 'ldap::ou::add': }    ->
+  #  class  { 'ldap::group::add': } ->
+  #  class  { 'ldap::user::add': }  ->
+  #anchor { 'end': }
+
 
   ### Quick ldif backup 
 
-  $cron_command = "/usr/sbin/db2ldif-online -P LDAP -D 'cn=Directory Manager' -j '/etc/dirsrv/manager-pass' -Z ldap -a '/var/backups/ldap.ldif' -s 'dc=arenstar,dc=net' > /dev/null"
+  $cron_command = "/usr/sbin/db2ldif-online -P LDAP -D 'cn=Directory Manager' -j '/etc/dirsrv/manager-pass' -Z ldap -s 'dc=arenstar,dc=net' -a /var/backups/ldap-`date +%s`.ldif > /dev/null"
 
   file { 'dirsrv_backup_dir':
     ensure      => directory,
@@ -114,27 +168,6 @@ node default {
     environment => [ 'PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin', "MAILTO=contact@davidarena.net" ];
   }
 
-  ldap::user::add { 'thenewguy':
-    ou          => 'ou=people',
-    ldap_suffix => 'dc=arenstar,dc=net',
-    givenname   => 'new',
-    lastname    => 'guy',
-    uidnumber   => '123456',
-    gidnumber   => '123456',
-  }
-
-  ldap::user::modify_pubkey { 'thenewguy':
-    ou          => 'ou=people',
-    ldap_suffix => 'dc=arenstar,dc=net',
-    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
-  }
-  ldap::user::modify_pubkey { 'sthenewguy':
-    ou          => 'ou=people',
-    ldap_suffix => 'dc=arenstar,dc=net',
-    pubkey      => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pQkiPe1whtRc3ymuQXcdvCiPRV3HdkMQEG2mLGo78UI2HReMj6o9szLsb/a8pQLA9bqzCrO96C3qDwwCAVZyMVaQkfVitx+F3EqQKUePuJGM1aFmRcGJmNSISFr7w1O1NJYZaU1qVmYGfhSNPXqgX23P1aeWB/mo2Y5bHjgUfhitz5Mkv7dRQnM98GR7u/YYMtY41duSSn4sCFSw25CFXQwr0uSUg7p1vAInBIS4M2BF5F9T7b6pQAjqIssMZdJ5tGlluhsQTcw48FoVOgqEmbDxVZmHnqj27LByU/NUN4ZiI2RZtXQQHUtyJEO8qJgE9PVXsxmxsVdTSuPe1AjZ',
-  }
-
-
 }
 
 define ldap::user::modify_pubkey (
@@ -149,9 +182,7 @@ define ldap::user::modify_pubkey (
   exec { "modify-${username}-pubkey":
     command     => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /tmp/modify_${username}_pubkey.ldif",
     subscribe   => File["/tmp/modify_${username}_pubkey.ldif"],
-    require     => Ldap::User::Add[$username],
-    #require     => File["/tmp/modify_${username}_pubkey.ldif"],
-    #unless      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b \"uid=${username},${ou},${ldap_suffix}\" \"uid=${username}\"",
+    onlyif      => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b \"uid=${username},${ou},${ldap_suffix}\" \"uid=${username}\"",
     refreshonly => true,
   }
 }
@@ -177,5 +208,36 @@ define ldap::user::add (
     command => "/usr/bin/ldapadd -x -D 'cn=Directory Manager' -w password -f /tmp/ldap_add_${username}.ldif",
     unless  => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b \"uid=${username},${ou},${ldap_suffix}\" \"uid=${username}\"",
     require => File["/tmp/ldap_add_${username}.ldif"];
+  }
+}
+
+define ldap::group::add (
+  $ou,
+  $ldap_suffix,
+  $memberuid,
+  $gidnumber,
+  $group = $title
+){
+  file { "/tmp/ldap_add_group_${group}.ldif":
+    content => template("/vagrant/puppet/templates/add_group.ldif.erb"),
+  }
+  exec { "ldap-add-${group}-group":
+    command => "/usr/bin/ldapadd -x -D 'cn=Directory Manager' -w password -f /tmp/ldap_add_group_${group}.ldif",
+    unless  => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b \"cn=${group},${ou},${ldap_suffix}\" \"cn=${group}\"",
+    require => File["/tmp/ldap_add_group_${group}.ldif"];
+  }
+}
+
+define ldap::ou::add (
+  $ldap_suffix,
+  $ou = $title
+){
+  file { "/tmp/ldap_add_ou_${ou}.ldif":
+    content => template("/vagrant/puppet/templates/add_organisational_units.ldif.erb"),
+  }
+  exec { "ldap-add-${ou}-ou":
+    command => "/usr/bin/ldapadd -x -D 'cn=Directory Manager' -w password -f /tmp/ldap_add_ou_${ou}.ldif",
+    unless  => "/usr/bin/ldapsearch -x -D 'cn=Directory Manager' -w password -b \"ou=${ou},${ldap_suffix}\" \"ou=${ou}\"",
+    require => File["/tmp/ldap_add_ou_${ou}.ldif"];
   }
 }

@@ -1,0 +1,5 @@
+dn: ou=<%= @ou -%>,<%= @ldap_suffix %>
+changetype: add
+objectclass: top
+objectclass: organizationalUnit
+ou: <%= @ou -%>
