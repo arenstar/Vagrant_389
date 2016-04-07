@@ -117,19 +117,11 @@ ldap_bind: Invalid credentials (49)
 ldapsearch -x -H ldaps://server.arenstar.net -b dc=arenstar,dc=net
 ```
 
-dn: cn=slapd-ldap,cn=389 Directory Server,cn=Server Group,cn=server.arenstar.net,ou=arenstar.net,o=NetscapeRoot
-changetype: modify
-replace: nsServerSecurity
-nsServerSecurity: on
-
-
 ### Checking Replication Status
 Refer to "nsds5replicaLastUpdateStatus"
 ```
 vagrant ssh 389-server
 ldapsearch -D "cn=directory manager" -w password -s sub -b cn=config "(objectclass=nsds5ReplicationAgreement)"
-
-
 
 # extended LDIF
 #
@@ -153,15 +145,13 @@ nsDS5ReplicaTransportInfo: TLS
 nsDS5ReplicaRoot: dc=arenstar,dc=net
 description: agreement between supplier and consumer
 nsDS5ReplicaUpdateSchedule: 0000-2359 0123456
-nsDS5ReplicatedAttributeList: (objectclass=*) $ EXCLUDE authorityRevocationLis
- t
+nsDS5ReplicatedAttributeList: (objectclass=*) $ EXCLUDE authorityRevocationList
 nsDS5ReplicaCredentials: secret
 nsds5replicareapactive: 0
 nsds5replicaLastUpdateStart: 20160407115515Z
 nsds5replicaLastUpdateEnd: 20160407115515Z
 nsds5replicaChangesSentSinceStartup:
-nsds5replicaLastUpdateStatus: 0 Replica acquired successfully: Incremental upd
- ate succeeded
+nsds5replicaLastUpdateStatus: 0 Replica acquired successfully: Incremental update succeeded
 nsds5replicaUpdateInProgress: FALSE
 nsds5replicaLastInitStart: 20160407115512Z
 nsds5replicaLastInitEnd: 20160407115514Z
