@@ -12,4 +12,8 @@ puppet module install saz-sudo
 puppet module install herculesteam-augeasproviders_pam
 puppet module install puppetlabs-apt
 
-echo '192.168.56.10    server.arenstar.net' >> /etc/hosts
+
+echo "127.0.0.1 client.arenstar.net client" >> /etc/hosts
+echo '192.168.56.10 server.arenstar.net' >> /etc/hosts
+echo '192.168.56.11 client.arenstar.net' >> /etc/hosts
+echo '192.168.56.12 replica.arenstar.net' >> /etc/hosts

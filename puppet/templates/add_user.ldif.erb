@@ -1,0 +1,17 @@
+dn: uid=<%= @username -%>,<%= @ou -%>,<%= @ldap_suffix %>
+objectClass: top
+objectClass: person
+objectClass: inetorgperson
+objectClass: posixAccount
+objectClass: ldapPublicKey
+description: LDAP user
+userPassword: <%= @password %>
+sshPublicKey: <%= @pubkey %>
+loginshell: <%= @loginshell %>
+homedirectory: <%= @homedir %>
+givenName: <%= @givenname %>
+cn: <%= @fullname %>
+sn: <%= @lastname %>
+uid: <%= @username %>
+uidNumber: <%= @uidnumber %>
+gidNumber: <%= @gidnumber %>

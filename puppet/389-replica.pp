@@ -47,20 +47,12 @@ node default {
 
   port389::instance { 'ldap':
     config_file => [
-        '/vagrant/ldifs/install/arenstarrootdb.ldif',
-        '/vagrant/ldifs/install/replicationuser.ldif',
-        '/vagrant/ldifs/install/replicationchangelog.ldif',
-        '/vagrant/ldifs/install/replicationconsumer.ldif',
-        '/vagrant/ldifs/install/replicationagreement.ldif',
+        '/vagrant/puppet/files/install/arenstarrootdb.ldif',
+        '/vagrant/puppet/files/install/replicationuser.ldif',
+        '/vagrant/puppet/files/install/replicationchangelog.ldif',
+        '/vagrant/puppet/files/install/replicationconsumer.ldif',
+        '/vagrant/puppet/files/install/replicationagreement.ldif',
     ],
     suffix      => port389_domain2dn($::domain),
   }
-
-  #exec { "create_consumer":
-  #  command   => "/usr/bin/ldapmodify -x -D 'cn=Directory Manager' -w password -f /vagrant/ldifs/create_consumer.ldif",
-  #  tries       => 3,
-  #  try_sleep   => 3,
-  #  subscribe   => Service["dirsrv"],
-  #  refreshonly => true
-  #}
 }

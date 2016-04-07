@@ -1,0 +1,4 @@
+dn: uid=<%= @username -%>,<%= @ou -%>,<%= @ldap_suffix %>
+changetype: modify
+replace: sshPublicKey
+sshPublicKey: <%= @pubkey %>

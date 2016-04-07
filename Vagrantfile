@@ -28,24 +28,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     server.vm.box = "ubuntu/trusty64"
     server.vm.hostname = 'server.arenstar.net'
     server.vm.network :private_network, ip: "192.168.56.10"
-    server.vm.provision :shell, :path => "tests/provision_server.sh"
-    server.vm.provision :puppet, :manifests_path => ["vm","/vagrant/tests"], :manifest_file => "389-server.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
+    server.vm.provision :shell, :path => "scripts/provision_server.sh"
+    server.vm.provision :puppet, :manifests_path => ["vm","/vagrant/puppet"], :manifest_file => "389-server.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
   end
 
   config.vm.define "389-client", autostart: true do |client|
     client.vm.box = "ubuntu/trusty64"
     client.vm.hostname = 'client.arenstar.net'
     client.vm.network  :private_network, ip: "192.168.56.11"
-    client.vm.provision :shell, :path => "tests/provision_client.sh"
-    client.vm.provision :puppet, :manifests_path => ["vm","/vagrant/tests"], :manifest_file => "389-client.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
+    client.vm.provision :shell, :path => "scripts/provision_client.sh"
+    client.vm.provision :puppet, :manifests_path => ["vm","/vagrant/puppet"], :manifest_file => "389-client.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
   end
 
   config.vm.define "389-replica", autostart: true do |replica|
     replica.vm.box = "ubuntu/trusty64"
     replica.vm.hostname = 'replica.arenstar.net'
     replica.vm.network  :private_network, ip: "192.168.56.12"
-    replica.vm.provision :shell, :path => "tests/provision_replica.sh"
-    replica.vm.provision :puppet, :manifests_path => ["vm","/vagrant/tests"], :manifest_file => "389-replica.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
+    replica.vm.provision :shell, :path => "scripts/provision_replica.sh"
+    replica.vm.provision :puppet, :manifests_path => ["vm","/vagrant/puppet"], :manifest_file => "389-replica.pp", :options => "--modulepath=/etc/puppet/modules --hiera_config /etc/hiera.yaml"
   end
 
 end

@@ -1,5 +1,6 @@
 node default {
 
+
   ### SSSD is now used in favour of pam_ldap for PAM -> https://fedorahosted.org/sssd/
   ### The following modules enables sss in pam/nsswitch instead of ldap 
 
@@ -26,7 +27,7 @@ node default {
         'ldap_tls_reqcert'           => 'never',
         'ldap_tls_cacert'            => '/vagrant/pki/arenstar_CA_cert.pem',
         'ldap_schema'                => 'rfc2307',
-        'ldap_uri'                   => 'ldaps://ldap.arenstar.net',
+        'ldap_uri'                   => ['ldaps://server.arenstar.net','ldaps://replica.arenstar.net'],
         'ldap_search_base'           => 'dc=arenstar,dc=net',
         'ldap_account_expire_policy' => 'rhds',
         'ldap_access_order'          => 'filter, expire',
@@ -70,8 +71,8 @@ node default {
       'UsePrivilegeSeparation' =>  'yes',
       'AuthorizedKeysCommand' => '/usr/bin/sss_ssh_authorizedkeys',
       'AuthorizedKeysCommandUser' => 'root',
-      'AuthorizedKeysFile' => '.ssh/authorized_keys',
-      ##### 'AuthorizedKeysFile' => '/dev/null', ### if you want store key ONLY in ldap
+      #'AuthorizedKeysFile' => '.ssh/authorized_keys',
+      'AuthorizedKeysFile' => '/dev/null', ### if you want store key ONLY in ldap
       ###'ProxyCommand' => '/usr/bin/sss_ssh_knownhostsproxy -p %p %h'
       ###'GlobalKnownHostsFile' => '/var/lib/sss/pubconf/known_hosts'
       'UsePAM' => 'yes',
