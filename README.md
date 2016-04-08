@@ -4,17 +4,22 @@
 
 ___Based on Ubuntu 14.04 Trusty64___
 
-This setup is a vagrant example to achieve:
+This setup is a vagrant example to create 3 systems:
 
-* A [389 Server](http://directory.fedoraproject.org/ "389 Server") **server.arenstar.net**).
-* MultiMaster replication **replica.arenstar.net** (NEEDS SSL IMPLEMENTATION)
-* Client machine Authentication using SSSD **client.arenstar.net**
-* SSHPubKey integration
-* Sudo integration for group **priv.ldap** over ldap
-* Sudo authentication via ssh-agent over ldap
-* Full live backups
-* Basic group and user setup
-* Password Policy and Lockout Policy configuration
+* **server.arenstar.net**  - [389 Server](http://directory.fedoraproject.org/ "389 Server")
+* **replica.arenstar.net** - Replication [389 Server](http://directory.fedoraproject.org/ "389 Server"
+* **client.arenstar.net**  - Client Authentication using [SSSD](https://fedorahosted.org/sssd/) "SSSD"
+
+Provided, these systems together achieve:
+
+* Basic LDAP Authentication over LDAP/TLS(389) LDAPS(636)
+* SSHPubKey LDAP Authentication
+* Puppet templates for Group and User Configuration
+* Password Policy and Lockout Policy Configuration
+* LDAP Sudo integration for group **priv.ldap**
+* LDAP Sudo Auth via SSH-AGENT using [pam-ssh-agent-auth](http://pamsshagentauth.sourceforge.net/) "pam-ssh-agent-auth"
+* Online Backup and Restore
+* Multimaster Replication over TLS
 
 It aims to solve some of the PCI-DSS scope for the following [PCIDSS v3](https://www.pcisecuritystandards.org/documents/PCI_DSS_v3.pdf "PCIDSS v3")
 
@@ -105,9 +110,9 @@ ldapsearch  -D "cn=Directory Manager" -w password -H ldap://server.arenstar.net 
 
 ### Check Users Password
 ```
-$ ldapwhoami -x -H ldap://replica.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w QaWsEd123
+$ ldapwhoami -x -H ldap://server.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w QaWsEd123
 dn: uid=mmustermann,ou=people,dc=arenstar,dc=net
-$ ldapwhoami -x -H ldap://replica.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w wrongpassword
+$ ldapwhoami -x -H ldap://server.arenstar.net -D "uid=mmustermann,ou=people,dc=arenstar,dc=net" -w wrongpassword
 ldap_bind: Invalid credentials (49)
 ```
 
