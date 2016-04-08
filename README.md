@@ -170,7 +170,7 @@ result: 0 Success
 ### Starting Replication 
 ```
 $ vagrant ssh 389-server
-$ ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/ldifs/modify_start_replication.ldif
+$ ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/puppet/files/modify_start_replication.ldif
 
 modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config"
 ```
