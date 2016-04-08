@@ -117,7 +117,7 @@ ldap_bind: Invalid credentials (49)
 
 ### Print Entire Directory
 ```
-ldapsearch -x -H ldaps://server.arenstar.net -b dc=arenstar,dc=net
+$ ldapsearch -x -H ldaps://server.arenstar.net -b dc=arenstar,dc=net
 ```
 
 ### Checking Replication Status
@@ -180,5 +180,11 @@ modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mappi
 From the dirsrv directory eg: /etc/dirsrv/slapd-ldap
 ``` 
 $ db2ldif-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -a /var/backups/ldap.ldif
+
+Exporting to ldif file: /var/backups/ldap.ldif
+Successfully added task entry "cn=export_2016_4_8_10_6_37, cn=export, cn=tasks, cn=config"
+
 $ ldif2db-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -i /var/backups/ldap.ldif
+
+Successfully added task entry "cn=import_2016_4_8_10_7_17, cn=import, cn=tasks, cn=config"
 ```
