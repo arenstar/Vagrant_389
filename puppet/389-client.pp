@@ -71,8 +71,8 @@ node default {
       'UsePrivilegeSeparation' =>  'yes',
       'AuthorizedKeysCommand' => '/usr/bin/sss_ssh_authorizedkeys',
       'AuthorizedKeysCommandUser' => 'root',
-      #'AuthorizedKeysFile' => '.ssh/authorized_keys',
-      'AuthorizedKeysFile' => '/dev/null', ### if you want store key ONLY in ldap
+      'AuthorizedKeysFile' => '.ssh/authorized_keys',
+      ##'AuthorizedKeysFile' => '/dev/null', ### if you want store key ONLY in ldap / DOES NOT WORK WITH VAGRANT
       ###'ProxyCommand' => '/usr/bin/sss_ssh_knownhostsproxy -p %p %h'
       ###'GlobalKnownHostsFile' => '/var/lib/sss/pubconf/known_hosts'
       'UsePAM' => 'yes',
@@ -97,6 +97,15 @@ node default {
       'PrintLastLog' => 'yes',
       'TCPKeepAlive' => 'yes',
     },
+  }
+
+  $base_dn = 'dc=arenstar,dc=net'
+  $uris    = 'ldaps://server.arenstar.net'
+
+  file { '/etc/ldap/ldap.conf':
+      ensure  => present,
+      mode    => '0444',
+      content => template('/vagrant/puppet/templates/ldap.conf.erb'),
   }
 
   class { 'sudo':
