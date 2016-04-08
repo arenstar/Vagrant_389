@@ -103,7 +103,7 @@ $ sudo su
 
 ### Return All Objects For A User
 ```
-ldapsearch  -D "cn=Directory Manager" -w password -H ldap://server.arenstar.net -s base -b "uid=jsmith,ou=people,dc=arenstar,dc=net" "objectclass=*"
+$ ldapsearch  -D "cn=Directory Manager" -w password -H ldap://server.arenstar.net -s base -b "uid=jsmith,ou=people,dc=arenstar,dc=net" "objectclass=*"
 ```
 
 
