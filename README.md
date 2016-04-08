@@ -7,17 +7,17 @@ ___Based on Ubuntu 14.04 Trusty64___
 This setup is a vagrant example to create 3 systems:
 
 * **server.arenstar.net**  - [389 Server](http://directory.fedoraproject.org/ "389 Server")
-* **replica.arenstar.net** - Replication [389 Server](http://directory.fedoraproject.org/ "389 Server"
-* **client.arenstar.net**  - Client Authentication using [SSSD](https://fedorahosted.org/sssd/) "SSSD"
+* **replica.arenstar.net** - Replication [389 Server](http://directory.fedoraproject.org/ "389 Server")
+* **client.arenstar.net**  - Client Authentication using [SSSD](https://fedorahosted.org/sssd/ "SSSD")
 
 Provided, these systems together achieve:
 
-* Basic LDAP Authentication over LDAP/TLS(389) LDAPS(636)
-* SSHPubKey LDAP Authentication
+* Basic LDAP Authentication over **_LDAP_**/**_TLS_** (389) **_LDAPS_** (636)
+* SSH PubKey LDAP Authentication
 * Puppet templates for Group and User Configuration
 * Password Policy and Lockout Policy Configuration
 * LDAP Sudo integration for group **priv.ldap**
-* LDAP Sudo Auth via SSH-AGENT using [pam-ssh-agent-auth](http://pamsshagentauth.sourceforge.net/) "pam-ssh-agent-auth"
+* LDAP Sudo Auth via SSH-AGENT using [pam-ssh-agent-auth](http://pamsshagentauth.sourceforge.net/ "pam-ssh-agent-auth")
 * Online Backup and Restore
 * Multimaster Replication over TLS
 
@@ -60,46 +60,45 @@ server.arenstar.net and replica.arenstar.net
 Install vagrant and from the directory of this repository
 
 ```
-vagrant box add trusty64 http://files.vagrantup.com/trust64.box
-vagrant up
-vagrant ssh
-vagrant destroy
+$ vagrant box add trusty64 http://files.vagrantup.com/trust64.box
+$ vagrant up
+$ vagrant ssh
+$ vagrant destroy
 ```
 
 ### Bringing up 389 over x11 ###
 (Note: To get X11 on OSX install xquartz - http://www.xquartz.org/ )
 ```
-vagrant ssh 389-server
-sudo /usr/bin/389-console -a http://server.arenstar.net:9830
+$ vagrant ssh 389-server
+$ sudo /usr/bin/389-console -a http://server.arenstar.net:9830
 
-vagrant ssh 389-replica
-sudo /usr/bin/389-console -a http://replica.arenstar.net:9830
+$ vagrant ssh 389-replica
+$ sudo /usr/bin/389-console -a http://replica.arenstar.net:9830
 ```
 
 ### Testing password login for LDAP users
 ```
-vagrant ssh 389-client
-ssh jsmith@127.0.0.1 
+$ vagrant ssh 389-client
+$ ssh jsmith@127.0.0.1 
 
-vagrant ssh 389-client
-su - mmustermann
+$ vagrant ssh 389-client
+$ su - mmustermann
 ```
 
 ### Testing SSH PubKey login for LDAP users
 ```
-vagrant ssh 389-client
-ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
+$ vagrant ssh 389-client
+$ ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
 ```
 
 ### Testing SSH PubKey sudo passwordless login for LDAP users
 Requires [pam-ssh-agent-auth](http://ppa.launchpad.net/cpick/pam-ssh-agent-auth/ubuntu/pool/main/p/pam-ssh-agent-auth/pam-ssh-agent-auth_0.10.2-0ubuntu0ppa1_amd64.deb"pam-ssh-agent-auth") >= 0.10.2 
-
 http://pamsshagentauth.sourceforge.net/
 
 ```
-vagrant ssh 389-client
-ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
-sudo su
+$ vagrant ssh 389-client
+$ ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
+$ sudo su
 ```
 
 ### Return All Objects For A User
@@ -124,8 +123,8 @@ ldapsearch -x -H ldaps://server.arenstar.net -b dc=arenstar,dc=net
 ### Checking Replication Status
 Refer to "nsds5replicaLastUpdateStatus"
 ```
-vagrant ssh 389-server
-ldapsearch -D "cn=directory manager" -w password -s sub -b cn=config "(objectclass=nsds5ReplicationAgreement)"
+$ vagrant ssh 389-server
+$ ldapsearch -D "cn=directory manager" -w password -s sub -b cn=config "(objectclass=nsds5ReplicationAgreement)"
 
 # extended LDIF
 #
@@ -136,8 +135,7 @@ ldapsearch -D "cn=directory manager" -w password -s sub -b cn=config "(objectcla
 #
 
 # replicaagreement, replica, dc\3Darenstar\2Cdc\3Dnet, mapping tree, config
-dn: cn=replicaagreement,cn=replica,cn=dc\3Darenstar\2Cdc\3Dnet,cn=mapping tree
- ,cn=config
+dn: cn=replicaagreement,cn=replica,cn=dc\3Darenstar\2Cdc\3Dnet,cn=mapping tree,cn=config
 objectClass: top
 objectClass: nsds5replicationagreement
 cn: replicaagreement
@@ -171,8 +169,9 @@ result: 0 Success
 
 ### Starting Replication 
 ```
-vagrant ssh 389-server
+$ vagrant ssh 389-server
 $ ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/ldifs/modify_start_replication.ldif
+
 modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config"
 ```
 
@@ -180,6 +179,6 @@ modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mappi
 ### Backup & Restore
 From the dirsrv directory eg: /etc/dirsrv/slapd-ldap
 ``` 
-db2ldif-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -a /var/backups/ldap.ldif
-ldif2db-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -i /var/backups/ldap.ldif
+$ db2ldif-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -a /var/backups/ldap.ldif
+$ ldif2db-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -i /var/backups/ldap.ldif
 ```
