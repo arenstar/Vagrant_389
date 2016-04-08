@@ -97,7 +97,6 @@ ssh -A -i /vagrant/pki/jsmith_private_ssh.key jsmith@127.0.0.1
 sudo su
 ```
 
-
 ### Return All Objects For A User
 ```
 ldapsearch  -D "cn=Directory Manager" -w password -H ldap://server.arenstar.net -s base -b "uid=jsmith,ou=people,dc=arenstar,dc=net" "objectclass=*"
@@ -170,4 +169,12 @@ result: 0 Success
 vagrant ssh 389-server
 $ ldapmodify -x  -D "cn=Directory Manager" -w password -f /vagrant/ldifs/modify_start_replication.ldif
 modifying entry "cn=ReplicaAgreement,cn=replica,cn="dc=arenstar,dc=net",cn=mapping tree,cn=config"
+```
+
+
+### Backup & Restore
+From the dirsrv directory eg: /etc/dirsrv/slapd-ldap
+``` 
+db2ldif-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -a /var/backups/ldap.ldif
+ldif2db-online -Z ldap -P LDAP -s 'dc=arenstar,dc=net' -D 'cn=Directory Manager' -w password -i /var/backups/ldap.ldif
 ```
